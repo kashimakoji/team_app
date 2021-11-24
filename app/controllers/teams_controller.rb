@@ -1,6 +1,7 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_team, only: %i[show edit update destroy]
+  before_action :ensure_owner, only: %i[edit update]
 
   def index
     @teams = Team.all
@@ -15,7 +16,9 @@ class TeamsController < ApplicationController
     @team = Team.new
   end
 
-  def edit; end
+  def edit
+    # byebug
+  end
 
   def create
     @team = Team.new(team_params)
@@ -30,12 +33,17 @@ class TeamsController < ApplicationController
   end
 
   def update
+    # if current_user == team.owner #追加
+
     if @team.update(team_params)
-      redirect_to @team, notice: I18n.t('views.messages.update_team')
+      redirect_to @team, notice: I18n.t('views.messages.update_team')#'チーム更新に成功しました！'
     else
-      flash.now[:error] = I18n.t('views.messages.failed_to_save_team')
+      flash.now[:error] = I18n.t('views.messages.failed_to_save_team')#'保存に失敗しました、、'
       render :edit
     end
+    # else
+    #   redirect_to @team
+    # end #追加
   end
 
   def destroy
@@ -47,6 +55,7 @@ class TeamsController < ApplicationController
     @team = current_user.keep_team_id ? Team.find(current_user.keep_team_id) : current_user.teams.first
   end
 
+
   private
 
   def set_team
@@ -56,4 +65,12 @@ class TeamsController < ApplicationController
   def team_params
     params.fetch(:team, {}).permit %i[name icon icon_cache owner_id keep_team_id]
   end
+
+  def ensure_owner
+    set_team
+    @team.owner == current_user
+    redirect_to @team, notice: '失敗しました' if @team.owner != current_user
+
+  end
+
 end
