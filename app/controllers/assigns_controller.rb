@@ -18,9 +18,10 @@ class AssignsController < ApplicationController
     assign = Assign.find(params[:id])
     destroy_message = assign_destroy(assign, assign.user)
     # binding.irb
-
     redirect_to team_url(params[:team_id]), notice: destroy_message
   end
+
+
 
   private
   def assign_params
