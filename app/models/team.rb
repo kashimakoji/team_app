@@ -12,15 +12,8 @@ class Team < ApplicationRecord
   has_many :users, foreign_key: :keep_team_id
   mount_uploader :icon, ImageUploader
 
-  # before_update :isOwned?(current_user)
-
   def invite_member(user)
     assigns.create(user: user)
   end
-
-  # def isOwned?(user)
-  #   return false if user.nil?
-  #   return self.user_id == user.id
-  # end
 
 end
