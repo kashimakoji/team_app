@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_team, only: %i[show edit update destroy]
+  before_action :authenticate_user! #deviseのメソッド
+  before_action :set_team, only: %i[show edit update destroy change_owner]
   before_action :ensure_owner, only: %i[edit update]
 
   def index
@@ -55,11 +55,22 @@ class TeamsController < ApplicationController
     @team = current_user.keep_team_id ? Team.find(current_user.keep_team_id) : current_user.teams.first
   end
 
+  def change_owner #チームIDとアサインID
+    # @team = Team.find(params[:id])
+    if @team.update(owner_id: params[:user_id])
+      # binding.irb
+      AssignMailer.change_owner_mail(@team.owner.email).deliver
+      redirect_to @team, notice: 'ownerを更新しました'
+    end
+# params[team_id] == @team.id
+# params[id] == assign.id
+  end
+
 
   private
 
   def set_team
-    @team = Team.friendly.find(params[:id])
+    @team = Team.friendly.find(params[:id]) #paramsは今自分がブラウザで見ているチームの情報を探す。friendlyはgem(ドメイン表示されるidを特定の名前に変える)
   end
 
   def team_params
@@ -69,8 +80,7 @@ class TeamsController < ApplicationController
   def ensure_owner
     set_team
     @team.owner == current_user
-    redirect_to @team, notice: '失敗しました' if @team.owner != current_user
-
+    redirect_to @team, notice: 'チームリーダーのみ編集可能です' if @team.owner != current_user
   end
 
 end
