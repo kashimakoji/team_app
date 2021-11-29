@@ -14,6 +14,7 @@ class AgendasController < ApplicationController
     @agenda = current_user.agendas.build(title: params[:title])
     @agenda.team = Team.friendly.find(params[:team_id])
     current_user.keep_team_id = @agenda.team.id
+    # byebug
     if current_user.save && @agenda.save
       redirect_to dashboard_url, notice: I18n.t('views.messages.create_agenda')
     else
@@ -24,8 +25,12 @@ class AgendasController < ApplicationController
 
   def destroy
     @agenda = Agenda.find(params[:id])
-    if @agenda.destroy
-      redirect_to dashboard_path, notice: '#{@agenda}を削除しました'
+    # byebug
+    if current_user.id == @agenda.team.owner.id || current_user.id == @agenda.user_id
+      @agenda.destroy
+      redirect_to dashboard_path, notice: "アジェンダ「#{@agenda.title}」を削除しました"
+    else
+      I18n.t('views.messages.cannot_delete_member_4_some_reason')
     end
   end
 
