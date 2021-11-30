@@ -30,16 +30,19 @@
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <% @working_team.agendas.each do |agenda| %>
           <li class="nav-item has-treeview menu-open">
+
             <a href="#" class="nav-link">
               <i class="fa fa-circle-o nav-icon"></i>
-              <p>
 
-                <%= agenda.title %>
-                <%= link_to "削除", agenda_path(agenda.id), method: :delete, class: 'btn btn-sm btn-danger' %>
+              <!--<div class="d-flex flex-row mb-3">-->
+              <div class="d-inline-flex ">
+                <div class="p-2"><%= agenda.title %></div>
+                <div class="p-2"><%= button_to "削除", agenda_path(agenda.id), method: :delete, class: 'btn btn-sm btn-danger' %></div>
+              </div>
 
                 <i class="right fa fa-angle-left"></i>
-              </p>
             </a>
+
             <ul class="nav nav-treeview" style="display: block;">
               <% agenda.articles.each do |article| %>
                 <li class="nav-item">

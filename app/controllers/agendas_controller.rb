@@ -28,6 +28,11 @@ class AgendasController < ApplicationController
     # byebug
     if current_user.id == @agenda.team.owner.id || current_user.id == @agenda.user_id
       @agenda.destroy
+      #--------------------------------------
+      # binding.irb
+      AssignMailer.delete_agenda_mail(@agenda.team.members).deliver
+
+      #--------------------------------
       redirect_to dashboard_path, notice: "アジェンダ「#{@agenda.title}」を削除しました"
     else
       I18n.t('views.messages.cannot_delete_member_4_some_reason')

@@ -12,4 +12,11 @@ class AssignMailer < ApplicationMailer
    mail to: @email, subject: 'リーダー変更'
  end
 
+ def delete_agenda_mail(team_members)
+   @members = team_members
+   # byebug
+   # mail to: @email, subject: 'アジェンダ削除通知'
+   mail to: @members.map(&:email).join(","), subject: "アジェンダ削除通知メールです。"
+ end
+
 end
