@@ -17,7 +17,6 @@ class TeamsController < ApplicationController
   end
 
   def edit
-    # byebug
   end
 
   def create
