@@ -22,7 +22,6 @@ class AgendasController < ApplicationController
     end
   end
 
-
   def destroy
     @agenda = Agenda.find(params[:id])
     # byebug
@@ -38,7 +37,6 @@ class AgendasController < ApplicationController
       I18n.t('views.messages.cannot_delete_member_4_some_reason')
     end
   end
-
 
   private
 

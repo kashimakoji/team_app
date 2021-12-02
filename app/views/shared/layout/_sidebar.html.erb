@@ -37,7 +37,7 @@
               <!--<div class="d-flex flex-row mb-3">-->
               <div class="d-inline-flex">
                 <div class="p-2"><%= agenda.title %></div>
-                <div class="p-2"><%= link_to "削除", agenda_path(agenda.id), method: :delete, class: 'btn btn-sm btn-primary' %></div>
+                  <div class="p-2"><%= link_to "削除", agenda_path(agenda.id), method: :delete, class: 'btn btn-sm btn-primary' if current_user.id == agenda.user_id || current_user.id == agenda.team.owner_id %></div>
               </div>
 
                 <i class="right fa fa-angle-left"></i>
