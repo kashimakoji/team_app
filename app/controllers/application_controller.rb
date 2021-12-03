@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
 
   def set_working_team
     @working_team = current_user.keep_team_id ? Team.find(current_user.keep_team_id) : Team.first
+    # 三項演算子＝条件式に？を付ける。？前まで代入している。？　true：feature
   end
 
   def init_team

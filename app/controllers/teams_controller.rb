@@ -1,5 +1,5 @@
 class TeamsController < ApplicationController
-  before_action :authenticate_user! #deviseのメソッド
+  before_action :authenticate_user! # deviseのメソッド
   before_action :set_team, only: %i[show edit update destroy change_owner]
   before_action :ensure_owner, only: %i[edit update]
 
@@ -17,7 +17,6 @@ class TeamsController < ApplicationController
   end
 
   def edit
-    # byebug
   end
 
   def create
@@ -36,9 +35,9 @@ class TeamsController < ApplicationController
     # if current_user == team.owner #追加
 
     if @team.update(team_params)
-      redirect_to @team, notice: I18n.t('views.messages.update_team')#'チーム更新に成功しました！'
+      redirect_to @team, notice: I18n.t('views.messages.update_team') # 'チーム更新に成功しました！'
     else
-      flash.now[:error] = I18n.t('views.messages.failed_to_save_team')#'保存に失敗しました、、'
+      flash.now[:error] = I18n.t('views.messages.failed_to_save_team') # '保存に失敗しました、、'
       render :edit
     end
     # else
@@ -55,22 +54,21 @@ class TeamsController < ApplicationController
     @team = current_user.keep_team_id ? Team.find(current_user.keep_team_id) : current_user.teams.first
   end
 
-  def change_owner #チームIDとアサインID
+  def change_owner # チームIDとアサインID
     # @team = Team.find(params[:id])
     if @team.update(owner_id: params[:user_id])
       # binding.irb
       AssignMailer.change_owner_mail(@team.owner.email).deliver
       redirect_to @team, notice: 'ownerを更新しました'
     end
-# params[team_id] == @team.id
-# params[id] == assign.id
+    # params[team_id] == @team.id
+    # params[id] == assign.id
   end
-
 
   private
 
   def set_team
-    @team = Team.friendly.find(params[:id]) #paramsは今自分がブラウザで見ているチームの情報を探す。friendlyはgem(ドメイン表示されるidを特定の名前に変える)
+    @team = Team.friendly.find(params[:id]) # paramsは今自分がブラウザで見ているチームの情報を探す。friendlyはgem(ドメイン表示されるidを特定の名前に変える)
   end
 
   def team_params
@@ -79,7 +77,7 @@ class TeamsController < ApplicationController
 
   def ensure_owner
     set_team
-    @team.owner == current_user
+    #@team.owner.id == current_user.id
     redirect_to @team, notice: 'チームリーダーのみ編集可能です' if @team.owner != current_user
   end
 
